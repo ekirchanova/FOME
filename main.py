@@ -19,6 +19,7 @@ class MyWin(QtWidgets.QMainWindow):
     Nddelta = count
     Ea = 0.045
     Ed = 0.045
+    flag = False
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.calc = StateCalculator.StateCalculator(self.material)
@@ -51,6 +52,7 @@ class MyWin(QtWidgets.QMainWindow):
         elem.setLabel("left", name_graph, **styles)
         elem.setLabel("bottom", "Acceptor concentration Na (1e18  cmˆ-3)", **styles)
         elem.addLegend()
+        elem.setLogMode(False,self.flag)
         elem.plot(self.Na/1e18, y_values, pen=pen,clear=True)
     def draw_graphics(self):
         self.draw_graph(self.ui.tab_4,"Electron concentration (cmˆ-3)",self.Electron_concentration)
