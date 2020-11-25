@@ -1,1 +1,0 @@
-pyuic5 fome.ui -o fome.py
