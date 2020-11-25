@@ -35,7 +35,7 @@ class StateCalculator:
         if material is None:
             self._material = elements["Si"]
         else:
-            self._material = material
+            self._material = elements[material]
         self._T = T
         self._Na_range = np.zeros(1)
         self._Nd_range = np.zeros(1)
@@ -45,7 +45,7 @@ class StateCalculator:
 
     def set_material(self, material=None):
         """Changes using material in calculator to another"""
-        self._material = material
+        self._material = elements[material]
 
     def set_temperature(self, T):
         """Changes using temperature in calculator to another"""

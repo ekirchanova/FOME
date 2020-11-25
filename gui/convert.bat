@@ -1,0 +1,1 @@
+pyuic5 last_var.ui -o last_var.py
