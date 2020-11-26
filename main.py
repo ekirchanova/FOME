@@ -19,8 +19,8 @@ class MyWin(QtWidgets.QMainWindow):
     Nddelta = count
     Ea = 0.045
     Ed = 0.045
-    flag = False
-
+    flag_x = False
+    flag_y =False
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.calc = StateCalculator.StateCalculator(self.material)
@@ -35,13 +35,17 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.lineEdit_9.textChanged.connect(self.onChanged_Temp)
         self.ui.lineEdit_10.textChanged.connect(self.onChanged_count)
         self.ui.pushButton.clicked.connect(self.work_with_button)
-        self.ui.checkBox.stateChanged.connect(self.set_log_axis)
-
-    def set_log_axis(self):
+        self.ui.checkBox.stateChanged.connect(self.set_log_axis_x)
+        self.ui.checkBox_2.stateChanged.connect(self.set_log_axis_y)
+    def set_log_axis_x(self):
         if self.ui.checkBox.isChecked():
-            self.flag = True
-        else: self.flag = False
+            self.flag_x = True
+        else: self.flag_x = False
 
+    def set_log_axis_y(self):
+        if self.ui.checkBox_2.isChecked():
+            self.flag_y = True
+        else: self.flag_y = False
     def work_with_button(self):
 
         self.material = self.ui.ComboBox.currentText()
@@ -60,7 +64,7 @@ class MyWin(QtWidgets.QMainWindow):
         elem.setLabel("left", name_graph, **styles)
         elem.setLabel("bottom", "Acceptor concentration Na (1e18  cmˆ-3)", **styles)
         elem.addLegend()
-        elem.setLogMode(False, self.flag)
+        elem.setLogMode(self.flag_x, self.flag_y)
         elem.plot(self.Na / 1e18, y_values, pen=pen, clear=True)
 
     def draw_graphics(self):
