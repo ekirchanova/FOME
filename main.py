@@ -42,13 +42,27 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.checkBox.stateChanged.connect(self.set_log_axis)
         self.ui.checkBox_3.stateChanged.connect(self.set_n)
         self.ui.checkBox_4.stateChanged.connect(self.set_p)
-        self.ui.pushButton_2.clicked.connect(self.save_graph)
+        self.ui.pushButton_2.clicked.connect(self.save_graphs)
 
-    def save_graph(self):
-        zip(self.Na, self.electron_mobility)
-        with open(r'text.csv', 'w') as f:
+    def save_graph(self,name_file, y_values):
+        arxiv = []
+        if (self.flag_n ):
+            arxiv = zip(self.Na, y_values)
+        elif (self.flag_p ):
+            arxiv = zip(self.Nd, y_values)
+        with open(name_file, 'w') as f:
             writer = csv.writer(f, delimiter='\t')
-            writer.writerows(zip(self.Na, self.electron_mobility))
+            writer.writerows(arxiv)
+
+    def save_graphs(self):
+        self.save_graph("Electron_concentration.csv", self.Electron_concentration)
+        self.save_graph("Electron_mobility.csv", self.electron_mobility)
+        self.save_graph("Hole_concentration.csv", self.Hole_concentration)
+        self.save_graph("Negative_acceptor_concentration.csv",
+                        self.Negative_acceptor_concentration)
+        self.save_graph("Positive_acceptor_concentration.csv", self.Positive_acceptor_concentration)
+        self.save_graph("Conductivity.csv", self.Conductivity)
+        self.save_graph("Resistivity.csv", self.Resistivity)
 
 
 
@@ -87,11 +101,11 @@ class MyWin(QtWidgets.QMainWindow):
         elem.setLabel("left", name_graph, **styles)
         elem.addLegend()
         elem.setLogMode(self.flag, False)
-        if (self.flag_n ):
+        if (self.flag_p ):
             elem.setLabel("bottom", "Acceptor concentration Na (1e18  cmˆ-3)", **styles)
             elem.plot(self.Na/ 1e18 , y_values, pen=pen, clear=True)
-        elif (self.flag_p ):
-            elem.setLabel("bottom", "Acceptor concentration Nd (1e18  cmˆ-3)", **styles)
+        elif (self.flag_n ):
+            elem.setLabel("bottom", "Donor concentration Nd (1e18  cmˆ-3)", **styles)
             elem.plot(self.Nd/ 1e18, y_values, pen=pen, clear=True)
 
 
