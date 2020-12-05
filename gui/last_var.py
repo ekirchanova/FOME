@@ -1,11 +1,17 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
-
+if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        desktop = QtGui.QApplication.desktop()
+        screen01 = desktop.primaryScreen()
+        res = desktop.screenGeometry(screen01)
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1300, 650)
+        MainWindow.setFixedSize(res.width(), res.height())
         MainWindow.setUnifiedTitleAndToolBarOnMac(False)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -14,8 +20,9 @@ class Ui_MainWindow(object):
         self.label.setObjectName("label")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(390, 10, 900, 550))
+        self.tabWidget.setFixedSize(0.79*res.width(), 0.87*res.height())
         self.tabWidget.setStyleSheet("background-color: rgb(254, 181, 80);\n"
-"background-color: rgb(177, 198, 222);")
+        "background-color: rgb(177, 198, 222);")
         self.tabWidget.setObjectName("tabWidget")
         self.tab = pg.PlotWidget()
         self.tab.setObjectName("tab")
@@ -130,6 +137,12 @@ class Ui_MainWindow(object):
         self.checkBox_2 = QtWidgets.QCheckBox(self.centralwidget)
         self.checkBox_2.setGeometry(QtCore.QRect(280, 490, 81, 31))
         self.checkBox_2.setObjectName("checkBox")
+        self.checkBox_3 = QtWidgets.QCheckBox(self.centralwidget)
+        self.checkBox_3.setGeometry(QtCore.QRect(280, 510, 81, 31))
+        self.checkBox_3.setObjectName("checkBox")
+        self.checkBox_4 = QtWidgets.QCheckBox(self.centralwidget)
+        self.checkBox_4.setGeometry(QtCore.QRect(280, 530, 81, 31))
+        self.checkBox_4.setObjectName("checkBox")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1183, 22))
@@ -138,6 +151,9 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setGeometry(QtCore.QRect(20, 470, 121, 61))
+        self.pushButton_2.setObjectName("pushButton")
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(2)
@@ -167,7 +183,6 @@ class Ui_MainWindow(object):
         self.lineEdit_8.setText("10")
         self.lineEdit_10.setText("100")
         self.lineEdit_9.setText("100")
-       # self.lineEdit_11.setText("300")
 
         self.label_3.setText(_translate("MainWindow", "min Nd"))
         self.label_4.setText(_translate("MainWindow", "max Nd"))
@@ -184,7 +199,10 @@ class Ui_MainWindow(object):
         self.label_16.setText(_translate("MainWindow", "*10ˆ18 cmˆ-3"))
         self.label_25.setText(_translate("MainWindow", "Temperature"))
         self.label_13.setText(_translate("MainWindow", "K"))
-        self.pushButton.setText(_translate("MainWindow", "OK"))
-       # self.pushButton_2.setText(_translate("MainWindow", "LOG"))
+        self.pushButton.setText(_translate("MainWindow", "DRAW PLOT"))
         self.checkBox.setText(_translate("MainWindow", "LogAxis X"))
         self.checkBox_2.setText(_translate("MainWindow", "LogAxis Y"))
+        self.checkBox_3.setText(_translate("MainWindow", "n"))
+        self.checkBox_3.setChecked(1)
+        self.checkBox_4.setText(_translate("MainWindow", "p"))
+        self.pushButton_2.setText(_translate("MainWindow", "SAVE"))
