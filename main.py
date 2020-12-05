@@ -3,24 +3,28 @@ import engine.Physics.StateCalculator as StateCalculator
 import gui.last_var as last_var
 import numpy as np
 import pyqtgraph as pg
+import csv
 
 from PyQt5 import QtCore, QtGui, QtWidgets , Qt
 
 
 class MyWin(QtWidgets.QMainWindow):
-    temperature = 100
+    temperature = 300
     material = "Si"
     count = 100
-    Namin = 0.1
-    Namax = 10
+    Namin = 1e17
+    Namax = 1e19
     Nadelta = count
-    Ndmin = 0.1
-    Ndmax = 10
+    Ndmin = 1e17
+    Ndmax = 1e19
     Nddelta = count
     Ea = 0.045
     Ed = 0.045
-    flag_x = False
-    flag_y =False
+    flag = False
+    flag_n = True
+    flag_p = False
+    index = 3
+
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.calc = StateCalculator.StateCalculator(self.material)
@@ -35,24 +39,43 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.lineEdit_9.textChanged.connect(self.onChanged_Temp)
         self.ui.lineEdit_10.textChanged.connect(self.onChanged_count)
         self.ui.pushButton.clicked.connect(self.work_with_button)
-        self.ui.checkBox.stateChanged.connect(self.set_log_axis_x)
-        self.ui.checkBox_2.stateChanged.connect(self.set_log_axis_y)
-    def set_log_axis_x(self):
+        self.ui.checkBox.stateChanged.connect(self.set_log_axis)
+        self.ui.checkBox_3.stateChanged.connect(self.set_n)
+        self.ui.checkBox_4.stateChanged.connect(self.set_p)
+        self.ui.pushButton_2.clicked.connect(self.save_graph)
+
+    def save_graph(self):
+        zip(self.Na, self.electron_mobility)
+        with open(r'text.csv', 'w') as f:
+            writer = csv.writer(f, delimiter='\t')
+            writer.writerows(zip(self.Na, self.electron_mobility))
+
+
+
+    def set_n(self):
+        if self.ui.checkBox_3.isChecked():
+            self.flag_n = True
+            self.flag_p = False
+            self.ui.checkBox_4.setChecked(0)
+
+    def set_p(self):
+        if self.ui.checkBox_4.isChecked():
+            self.flag_p = True
+            self.flag_n = False
+            self.ui.checkBox_3.setChecked(0)
+
+    def set_log_axis(self):
         if self.ui.checkBox.isChecked():
-            self.flag_x = True
-        else: self.flag_x = False
+            self.flag = True
+        else: self.flag = False
 
-    def set_log_axis_y(self):
-        if self.ui.checkBox_2.isChecked():
-            self.flag_y = True
-        else: self.flag_y = False
     def work_with_button(self):
-
+        self.index = self.ui.tabWidget.currentIndex()
         self.material = self.ui.ComboBox.currentText()
         self.calc.set_material(str(self.material))
         self.calc.set_temperature(float(self.temperature))
-        self.Na = np.linspace(float(self.Namin)*1e18, float(self.Namax)*1e18, int(self.count))
-        self.Nd = np.linspace(float(self.Ndmin)*1e18, float(self.Ndmax)*1e18, int(self.count))
+        self.Na = np.linspace(float(self.Namin), float(self.Namax), int(self.count))
+        self.Nd = np.linspace(float(self.Ndmin), float(self.Ndmax), int(self.count))
         self.calc.set_additions(self.Na, float(self.Ea), self.Nd, float(self.Ed))
         self.calc.update()
         self.full_all_field()
@@ -62,10 +85,15 @@ class MyWin(QtWidgets.QMainWindow):
         pen = pg.mkPen(color=(0, 0, 0), width=1)
         styles = {"color": "#000", "font-size": "20px"}
         elem.setLabel("left", name_graph, **styles)
-        elem.setLabel("bottom", "Acceptor concentration Na (1e18  cmˆ-3)", **styles)
         elem.addLegend()
-        elem.setLogMode(self.flag_x, self.flag_y)
-        elem.plot(self.Na / 1e18, y_values, pen=pen, clear=True)
+        elem.setLogMode(self.flag, False)
+        if (self.flag_n ):
+            elem.setLabel("bottom", "Acceptor concentration Na (1e18  cmˆ-3)", **styles)
+            elem.plot(self.Na/ 1e18 , y_values, pen=pen, clear=True)
+        elif (self.flag_p ):
+            elem.setLabel("bottom", "Acceptor concentration Nd (1e18  cmˆ-3)", **styles)
+            elem.plot(self.Nd/ 1e18, y_values, pen=pen, clear=True)
+
 
     def draw_graphics(self):
 
