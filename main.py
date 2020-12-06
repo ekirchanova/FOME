@@ -1,6 +1,6 @@
 import sys
-import engine.Physics.StateCalculator as StateCalculator
-import gui.last_var as last_var
+import StateCalculator as StateCalculator
+import last_var
 import numpy as np
 import pyqtgraph as pg
 import csv
@@ -33,16 +33,16 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.lineEdit_3.textChanged.connect(self.onChanged_Ndmax)
         self.ui.lineEdit_4.textChanged.connect(self.onChanged_Ed)
         self.ui.lineEdit_5.textChanged.connect(self.onChanged_Ndmin)
-        self.ui.lineEdit_6.textChanged.connect(self.onChanged_Ea)
-        self.ui.lineEdit_7.textChanged.connect(self.onChanged_Namin)
-        self.ui.lineEdit_8.textChanged.connect(self.onChanged_Namax)
+        #self.ui.lineEdit_6.textChanged.connect(self.onChanged_Ea)
+        #self.ui.lineEdit_7.textChanged.connect(self.onChanged_Namin)
+        #self.ui.lineEdit_8.textChanged.connect(self.onChanged_Namax)
         self.ui.lineEdit_9.textChanged.connect(self.onChanged_Temp)
         self.ui.lineEdit_10.textChanged.connect(self.onChanged_count)
         self.ui.pushButton.clicked.connect(self.work_with_button)
         self.ui.checkBox.stateChanged.connect(self.set_log_axis)
         self.ui.checkBox_3.stateChanged.connect(self.set_n)
         self.ui.checkBox_4.stateChanged.connect(self.set_p)
-        self.ui.pushButton_2.clicked.connect(self.save_graphs)
+        self.ui.pushButton_2.clicked.connect(self.save_graph)
 
     def save_graph(self,name_file, y_values):
         arxiv = []
@@ -63,8 +63,6 @@ class MyWin(QtWidgets.QMainWindow):
         self.save_graph("Positive_acceptor_concentration.csv", self.Positive_acceptor_concentration)
         self.save_graph("Conductivity.csv", self.Conductivity)
         self.save_graph("Resistivity.csv", self.Resistivity)
-
-
 
     def set_n(self):
         if self.ui.checkBox_3.isChecked():
@@ -99,27 +97,20 @@ class MyWin(QtWidgets.QMainWindow):
         pen = pg.mkPen(color=(0, 0, 0), width=1)
         styles = {"color": "#000", "font-size": "20px"}
         elem.setLabel("left", name_graph, **styles)
+        elem.setLabel("bottom", "Acceptor concentration Na (1e18  cmˆ-3)", **styles)
         elem.addLegend()
         elem.setLogMode(self.flag, False)
-        if (self.flag_p ):
-            elem.setLabel("bottom", "Acceptor concentration Na (1e18  cmˆ-3)", **styles)
-            elem.plot(self.Na/ 1e18 , y_values, pen=pen, clear=True)
-        elif (self.flag_n ):
-            elem.setLabel("bottom", "Donor concentration Nd (1e18  cmˆ-3)", **styles)
-            elem.plot(self.Nd/ 1e18, y_values, pen=pen, clear=True)
+        elem.plot(self.Na , y_values, pen=pen, clear=True)
 
 
     def draw_graphics(self):
 
         self.draw_graph(self.ui.tab_4, "Electron concentration (cmˆ-3)", self.Electron_concentration)
-        self.draw_graph(self.ui.tab9, "Electron mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.electron_mobility)
-        self.draw_graph(self.ui.tab8, "Hole mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.Hole_mobility)
+        self.draw_graph(self.ui.tab, "Electron mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.electron_mobility)
         self.draw_graph(self.ui.tab_2, "Hole concentration (1e18 cmˆ-3)", self.Hole_concentration / 1e18)
-        if(self.flag_p):
-            self.draw_graph(self.ui.tab_3, "Negative acceptor concentration (1e18 cmˆ-3)",
+        self.draw_graph(self.ui.tab_3, "Negative acceptor concentration (1e18 cmˆ-3)",
                         self.Negative_acceptor_concentration / 1e18)
-        elif(self.flag_n):
-            self.draw_graph(self.ui.tab_3, "Positive acceptor concentration (cmˆ-3)", self.Positive_acceptor_concentration)
+        self.draw_graph(self.ui.tab_5, "Positive acceptor concentration (cmˆ-3)", self.Positive_acceptor_concentration)
         self.draw_graph(self.ui.tab_6, "Conductivity (Ωˆ-1 * cmˆ-1)", self.Conductivity)
         self.draw_graph(self.ui.tab_7, "Resistivity (Ω * cm)", self.Resistivity)
 
