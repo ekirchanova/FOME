@@ -167,3 +167,4 @@ class Ui_MainWindow(object):
         self.checkBox_3.setChecked(1)
         self.checkBox_4.setText(_translate("MainWindow", "p"))
         self.pushButton_2.setText(_translate("MainWindow", "SAVE"))
+        
