@@ -57,7 +57,7 @@ class MyWin(QtWidgets.QMainWindow):
 
     def save_graphs(self):
         self.save_graph("Electron_concentration.csv", self.Electron_concentration)
-        self.save_graph("Electron_mobility.csv", self.electron_mobility)
+        self.save_graph("Electron_mobility.csv", self.Electron_mobility)
         self.save_graph("Hole_mobility.csv", self.Hole_mobility)
         self.save_graph("Hole_concentration.csv", self.Hole_concentration)
         self.save_graph("Negative_acceptor_concentration.csv",
@@ -134,7 +134,7 @@ class MyWin(QtWidgets.QMainWindow):
 
     def draw_graphics(self):
         self.draw_graph(self.ui.tab_4, "Electron concentration (cmˆ-3)", self.Electron_concentration)
-        self.draw_graph(self.ui.tab_8, "Electron mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.electron_mobility)
+        self.draw_graph(self.ui.tab_8, "Electron mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.Electron_mobility)
         self.draw_graph(self.ui.tab_9, "Hole mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.Hole_mobility)
         self.draw_graph(self.ui.tab_2, "Hole concentration (1e18 cmˆ-3)", self.Hole_concentration / 1e18)
         if(self.flag_n):
@@ -150,7 +150,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.Hole_concentration = self.calc.get_hole_concentration()
         self.Positive_acceptor_concentration = self.calc.get_pos_donor_concentration()
         self.Negative_acceptor_concentration = self.calc.get_neg_acceptor_concentration()
-        self.electron_mobility = self.calc.get_electron_mobility()
+        self.Electron_mobility = self.calc.get_electron_mobility()
         self.Hole_mobility = self.calc.get_hole_mobility()
         self.Conductivity = self.calc.get_conductivity()
         self.Resistivity = self.calc.get_resistivity()
