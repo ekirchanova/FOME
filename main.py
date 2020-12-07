@@ -47,9 +47,9 @@ class MyWin(QtWidgets.QMainWindow):
 
     def save_graph(self,name_file, y_values):
         arxiv = []
-        if (self.flag_n ):
+        if (self.flag_p ):
             arxiv = zip(self.Na, y_values)
-        elif (self.flag_p ):
+        elif (self.flag_n ):
             arxiv = zip(self.Nd, y_values)
         with open(name_file, 'w') as f:
             writer = csv.writer(f, delimiter='\t')
@@ -89,14 +89,20 @@ class MyWin(QtWidgets.QMainWindow):
         else: self.flag_logy = False
 
     def work_with_flag(self):
-        if (self.flag_n):
+        if (self.flag_p):
             self.Namin = self.Nmin
             self.Namax = self.Nmax
             self.Ea = self.E
-        elif(self.flag_p):
+            self.Ndmin = 0
+            self.Ndmax = 0
+            self.Ed = 0
+        elif(self.flag_n):
             self.Ndmin = self.Nmin
             self.Ndmax = self.Nmax
             self.Ed = self.E
+            self.Namin = 0
+            self.Namax = 0
+            self.Ea = 0
 
     def work_with_button(self):
         self.work_with_flag()
@@ -109,6 +115,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.calc.set_additions(self.Na, float(self.Ea), self.Nd, float(self.Ed))
         self.calc.update()
         self.full_all_field()
+        print(self.Hole_concentration)
         self.draw_graphics()
 
     def draw_graph(self, elem, name_graph, y_values):
@@ -117,10 +124,10 @@ class MyWin(QtWidgets.QMainWindow):
         elem.setLabel("left", name_graph, **styles)
         elem.addLegend()
         elem.setLogMode(self.flag_logx, self.flag_logy)
-        if(self.flag_n):
+        if(self.flag_p):
             elem.setLabel("bottom", "Acceptor concentration Na (1e18  cmˆ-3)", **styles)
             elem.plot(self.Na/1e18 , y_values, pen=pen, clear=True)
-        elif(self.flag_p):
+        elif(self.flag_n):
             elem.setLabel("bottom", "Donor concentration Nd (1e18  cmˆ-3)", **styles)
             elem.plot(self.Nd/1e18, y_values, pen=pen, clear=True)
 
@@ -130,9 +137,9 @@ class MyWin(QtWidgets.QMainWindow):
         self.draw_graph(self.ui.tab_8, "Electron mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.electron_mobility)
         self.draw_graph(self.ui.tab_9, "Hole mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.Hole_mobility)
         self.draw_graph(self.ui.tab_2, "Hole concentration (1e18 cmˆ-3)", self.Hole_concentration / 1e18)
-        if(self.flag_p):
-            self.draw_graph(self.ui.tab_3, "Positive acceptor concentration (cmˆ-3)", self.Positive_acceptor_concentration)
-        elif(self.flag_n):
+        if(self.flag_n):
+            self.draw_graph(self.ui.tab_3, "Positive donor concentration (cmˆ-3)", self.Positive_acceptor_concentration)
+        elif(self.flag_p):
             self.draw_graph(self.ui.tab_3, "Negative acceptor concentration (1e18 cmˆ-3)",
                             self.Negative_acceptor_concentration / 1e18)
         self.draw_graph(self.ui.tab_6, "Conductivity (Ωˆ-1 * cmˆ-1)", self.Conductivity)
