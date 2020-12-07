@@ -8,9 +8,12 @@ import engine.Methematics.NumericalMethods as Math
 # mn - electron effective mass, amounts of m0
 # mp - hole effective mass, amounts of m0
 elements = {
-    "Si": {"Eg": 1.120, "mn": 0.36, "mp": 0.81},
-    "GaAs": {"Eg": 1.424, "mn": 0.85, "mp": 0.53},
-    "Ge": {"Eg": 0.661, "mn": 0.22, "mp": 0.34}
+    "Si": {"Eg": 1.120, "mn": 0.36, "mp": 0.81,
+           "Ae": Equations.Ae_Si, "Ap": Equations.Ap_Si, "Be": Equations.Be_Si, "Bp": Equations.Bp_Si},
+    "GaAs": {"Eg": 1.424, "mn": 0.85, "mp": 0.53,
+             "Ae": Equations.Ae_GaAs, "Ap": Equations.Ap_GaAs, "Be": Equations.Be_GaAs, "Bp": Equations.Bp_GaAs},
+    "Ge": {"Eg": 0.661, "mn": 0.22, "mp": 0.34,
+           "Ae": Equations.Ae_Ge, "Ap": Equations.Ap_Ge, "Be": Equations.Be_Ge, "Bp": Equations.Bp_Ge}
 }
 
 
@@ -90,8 +93,10 @@ class StateCalculator:
             self._Ndp[i] = Equations.pos_donor_concentration(self._Nd_range[i], _Ef, self._material["Eg"] - self._Ed,
                                                              self._T)
             self._Nan[i] = Equations.neg_acceptor_concentration(self._Na_range[i], _Ef, self._Ea, self._T)
-            self._mn[i] = Equations.get_electron_mobility(self._Ndp[i], self._Nan[i], self._T)
-            self._mp[i] = Equations.get_hole_mobility(self._Ndp[i], self._Nan[i], self._T)
+            self._mn[i] = Equations.get_mobility(
+                self._Ndp[i], self._Nan[i], self._T, self._material["Ae"], self._material["Be"])
+            self._mp[i] = Equations.get_mobility(
+                self._Ndp[i], self._Nan[i], self._T, self._material["Ap"], self._material["Bp"])
             self._s[i] = Equations.get_conductivity(self._ne[i], self._mn[i], self._np[i], self._mp[i])
 
     def get_fermi_levels(self):
