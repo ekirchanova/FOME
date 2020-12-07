@@ -10,14 +10,21 @@ J_TO_ERG = 1e7
 EV_TO_ERG = EV_TO_J * J_TO_ERG
 
 # Constants for mobility equations
-# T0np = 1
-# T0n = 1
-# T0pp = 1
-# T0p = 1
-Ae = 6.43e6
-Be = 7.13e-12
-Ap = 1.8e6
-Bp = 1.04e-12
+# Si
+Ae_Si = 6.43e6
+Be_Si = 7.13e-12
+Ap_Si = 1.8e6
+Bp_Si = 1.04e-12
+# Ge
+Ae_Ge = 18.7e6
+Be_Ge = 30.6e-12
+Ap_Ge = 8.02e6
+Bp_Ge = 21.3e-12
+# GaAs
+Ae_GaAs = 53.5e6
+Be_GaAs = 14.8e-12
+Ap_GaAs = 1.8e6
+Bp_GaAs = 2.38e-12
 
 # Constants for reducing magnitude of values during computations
 # transform values to concentration control units
@@ -168,38 +175,22 @@ def neg_acceptor_concentration_d(Na0, Ef, Ea, T):
     return Na0 * ERG_TO_CU / T * numpy.exp(ERG_TO_CU * (Ea - Ef) / T) / (1 + numpy.exp(ERG_TO_CU * (Ea - Ef) / T)) ** 2
 
 
-def get_electron_mobility(Ndp, Nan, T):
+def get_mobility(Ndp, Nan, T, A, B):
     """
-    Calculates electron mobility in semiconductor crystal cell.
+    Calculates particle mobility in semiconductor crystal cell.
+    By formulae: mobility = Ae/(T**1.5 + Be*(Ndp + Nan)*/T**1.5)
 
     Args:
         Ndp(float): positive donor ions concentration in concentration control units.
         Nan(float): negative acceptor ions concentration in concentration control units.
         T(float): current temperature in Kelvins.
+        A(float): coefficient, describing particle in equation.
+        B(float): coefficient, describing particle in equation.
 
     Returns:
         float: value of electron mobility in concentration control units.
     """
-    #TODO 2: Shall we use our own equations for mobility estimation?
-    # 1/((T/T0np)**1.5 + (Ndp + Nan)*(T0n/T)**1.5)
-    return Ae / (T ** 1.5 + Be * (Ndp + Nan) * T ** -1.5)
-
-
-def get_hole_mobility(Ndp, Nan, T):
-    """
-    Calculates hole mobility in semiconductor crystal cell.
-
-    Args:
-        Ndp(float): positive donor ions concentration in concentration control units.
-        Nan(float): negative acceptor ions concentration in concentration control units.
-        T(float): current temperature in Kelvins.
-
-    Returns:
-        float: value of hole mobility in concentration control units.
-    """
-    #TODO 2: Shall we use our own equations for mobility estimation?
-    # 1/((T/T0pp)**1.5 + (Ndp + Nan)*(T0p/T)**1.5)
-    return Ap / (T ** 1.5 + Bp * (Ndp + Nan) * T ** -1.5)
+    return A / (T ** 1.5 + B * (Ndp + Nan) * T ** -1.5)
 
 
 def get_conductivity(ne, mn, np, mp):
