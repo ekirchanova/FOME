@@ -43,7 +43,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.checkBox_2.stateChanged.connect(self.set_log_y_axis)
         self.ui.checkBox_3.stateChanged.connect(self.set_n)
         self.ui.checkBox_4.stateChanged.connect(self.set_p)
-        self.ui.pushButton_2.clicked.connect(self.save_graph)
+        self.ui.pushButton_2.clicked.connect(self.save_graphs)
 
     def save_graph(self,name_file, y_values):
         arxiv = []
