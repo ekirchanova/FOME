@@ -152,7 +152,7 @@ class Ui_MainWindow(object):
         self.lineEdit_5.setText("0.1")
         self.lineEdit_3.setText("10")
         self.lineEdit_10.setText("100")
-        self.lineEdit_9.setText("100")
+        self.lineEdit_9.setText("300")
 
         self.label_3.setText(_translate("MainWindow", "min N"))
         self.label_4.setText(_translate("MainWindow", "max N"))
