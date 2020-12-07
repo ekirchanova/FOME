@@ -9,7 +9,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets , Qt
 
 
 class MyWin(QtWidgets.QMainWindow):
-    temperature = 100
+    temperature = 300
     material = "Si"
     count = 100
     Namin = 0
@@ -93,15 +93,15 @@ class MyWin(QtWidgets.QMainWindow):
             self.Namin = self.Nmin
             self.Namax = self.Nmax
             self.Ea = self.E
-            self.Ndmin = 0
-            self.Ndmax = 0
+            self.Ndmin = self.Nmin
+            self.Ndmax = self.Nmax
             self.Ed = 0
         elif(self.flag_n):
             self.Ndmin = self.Nmin
             self.Ndmax = self.Nmax
             self.Ed = self.E
-            self.Namin = 0
-            self.Namax = 0
+            self.Namin = self.Nmin
+            self.Namax = self.Nmax
             self.Ea = 0
 
     def work_with_button(self):
