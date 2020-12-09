@@ -49,22 +49,24 @@ class MyWin(QtWidgets.QMainWindow):
         arxiv = []
         if (self.flag_p ):
             arxiv = zip(self.Na, y_values)
+            name_file = name_file + "_Na.csv"
         elif (self.flag_n ):
             arxiv = zip(self.Nd, y_values)
+            name_file = name_file + "_Nd.csv"
         with open(name_file, 'w') as f:
-            writer = csv.writer(f, delimiter='\t')
+            writer = csv.writer(f, delimiter=',')
             writer.writerows(arxiv)
 
     def save_graphs(self):
-        self.save_graph("Electron_concentration.csv", self.Electron_concentration)
-        self.save_graph("Electron_mobility.csv", self.Electron_mobility)
-        self.save_graph("Hole_mobility.csv", self.Hole_mobility)
-        self.save_graph("Hole_concentration.csv", self.Hole_concentration)
-        self.save_graph("Negative_acceptor_concentration.csv",
+        self.save_graph("Electron_concentration", self.Electron_concentration)
+        self.save_graph("Electron_mobility", self.Electron_mobility)
+        self.save_graph("Hole_mobility", self.Hole_mobility)
+        self.save_graph("Hole_concentration", self.Hole_concentration)
+        self.save_graph("Negative_acceptor_concentration",
                         self.Negative_acceptor_concentration)
-        self.save_graph("Positive_acceptor_concentration.csv", self.Positive_acceptor_concentration)
-        self.save_graph("Conductivity.csv", self.Conductivity)
-        self.save_graph("Resistivity.csv", self.Resistivity)
+        self.save_graph("Positive_acceptor_concentration", self.Positive_acceptor_concentration)
+        self.save_graph("Conductivity", self.Conductivity)
+        self.save_graph("Resistivity", self.Resistivity)
 
     def set_n(self):
         if self.ui.checkBox_3.isChecked():
