@@ -3,6 +3,7 @@ import numpy as np
 import engine.Physics.Equations as Equations
 import engine.Methematics.NumericalMethods as Math
 
+
 # General parameters of semiconductor materials
 # Eg - energy gap, eV
 # mn - electron effective mass, amounts of m0
@@ -15,7 +16,6 @@ elements = {
     "Ge": {"Eg": 0.661, "mn": 0.22, "mp": 0.34,
            "Ae": Equations.Ae_Ge, "Ap": Equations.Ap_Ge, "Be": Equations.Be_Ge, "Bp": Equations.Bp_Ge}
 }
-
 
 class StateCalculator:
     # Can it be just a single value?
@@ -56,8 +56,8 @@ class StateCalculator:
 
     def set_additions(self, Na, Ea, Nd, Ed):
         """Changes using concentrations and energies of additions for material in calculator to other"""
-        self._Na_range = np.array(Na) * Equations.CONCENTRATION_TO_CU
-        self._Nd_range = np.array(Nd) * Equations.CONCENTRATION_TO_CU
+        self._Na_range = np.array(Na)
+        self._Nd_range = np.array(Nd)
         self._Ea = Ea
         self._Ed = Ed
         self.__fill_parameters()
@@ -69,22 +69,22 @@ class StateCalculator:
         for i in range(len(self._Na_range)):
             def balance_equation(x):
                 return (
-                        Equations.pos_donor_concentration(self._Nd_range[i], x, self._material["Eg"] - self._Ed,
-                                                          self._T) -
-                        Equations.neg_acceptor_concentration(self._Na_range[i], x, self._Ea, self._T) +
                         Equations.hole_concentration(_Nv, x, self._T) -
-                        Equations.electron_concentration(_Nc, x, self._material["Eg"], self._T))
+                        Equations.electron_concentration(_Nc, x, self._material["Eg"], self._T) -
+                        Equations.neg_acceptor_concentration(self._Na_range[i], x, self._Ea, self._T) +
+                        Equations.pos_donor_concentration(self._Nd_range[i], x, self._material["Eg"] - self._Ed,
+                                                          self._T))
 
             def balance_equation_d(x):
                 return (
-                        Equations.pos_donor_concentration_d(self._Nd_range[i], x, self._material["Eg"] - self._Ed,
-                                                            self._T) -
-                        Equations.neg_acceptor_concentration_d(self._Na_range[i], x, self._Ea, self._T) +
                         Equations.hole_concentration_d(_Nv, x, self._T) -
-                        Equations.electron_concentration_d(_Nc, x, self._material["Eg"], self._T))
+                        Equations.electron_concentration_d(_Nc, x, self._material["Eg"], self._T) -
+                        Equations.neg_acceptor_concentration_d(self._Na_range[i], x, self._Ea, self._T) +
+                        Equations.pos_donor_concentration_d(self._Nd_range[i], x, self._material["Eg"] - self._Ed,
+                                                            self._T))
 
-            _Ef = Math.newton_method(0, balance_equation, balance_equation_d, 1e-10)
-            # _Ef = dichotomy_method(0, self._material["Eg"], balance_equation, 1e-10)
+            # _Ef = Math.newton_method(self._material["Eg"]/2, balance_equation, balance_equation_d, 60)
+            _Ef = Math.dichotomy_method(-self._material["Eg"], 2*self._material["Eg"], balance_equation, 50)
 
             _Ef = _Ef[0]
             self._Ef[i] = _Ef
@@ -105,19 +105,19 @@ class StateCalculator:
 
     def get_electron_concentration(self):
         """Returns value of electron concentration for set parameters"""
-        return self._ne * Equations.CU_TO_CONCENTRATION
+        return self._ne
 
     def get_hole_concentration(self):
         """Returns value of hole concentration for set parameters"""
-        return self._np * Equations.CU_TO_CONCENTRATION
+        return self._np
 
     def get_pos_donor_concentration(self):
         """Returns value of positive charged donor ions concentration for set parameters"""
-        return self._Ndp * Equations.CU_TO_CONCENTRATION
+        return self._Ndp
 
     def get_neg_acceptor_concentration(self):
         """Returns value of negative charged acceptor ions concentration for set parameters"""
-        return self._Nan * Equations.CU_TO_CONCENTRATION
+        return self._Nan
 
     def get_electron_mobility(self):
         """Returns value of electron mobility for set parameters"""
