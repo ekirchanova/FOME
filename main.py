@@ -46,16 +46,17 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.pushButton_2.clicked.connect(self.save_graphs)
 
     def save_graph(self,name_file, y_values):
-        arxiv = []
+        n = y_values.shape[0]
         if (self.flag_p ):
             name_file = name_file + "_Na.csv"
-            arxiv = zip(self.Na, y_values)
+            x = self.Na
         elif (self.flag_n ):
             name_file = name_file + "_Nd.csv"
-            arxiv = zip(self.Nd,y_values)
+            x = self.Nd
         with open(name_file, 'w') as f:
-            writer = csv.writer(f, delimiter='\t')
-            writer.writerows(arxiv)
+            writer = csv.writer(f, delimiter=',')
+            for i in zip(x,y_values):
+                writer.writerow(i)
 
     def save_graphs(self):
         self.save_graph("Electron_concentration", self.Electron_concentration)
