@@ -135,7 +135,7 @@ class MyWin(QtWidgets.QMainWindow):
 
 
     def draw_graphics(self):
-        self.draw_graph(self.ui.tab_4, "Electron concentration (cmˆ-3)", self.Electron_concentration/ 1e18)
+        self.draw_graph(self.ui.tab_4, "Electron concentration (1e18 cmˆ-3)", self.Electron_concentration/ 1e18)
         self.draw_graph(self.ui.tab_8, "Electron mobility (1e18 cmˆ2 * Vˆ1 * sˆ-1)", self.Electron_mobility)
         self.draw_graph(self.ui.tab_9, "Hole mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.Hole_mobility)
         self.draw_graph(self.ui.tab_2, "Hole concentration (1e18 cmˆ-3)", self.Hole_concentration / 1e18)
