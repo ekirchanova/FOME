@@ -133,15 +133,16 @@ class MyWin(QtWidgets.QMainWindow):
 
 
     def draw_graphics(self):
-        self.draw_graph(self.ui.tab_4, "Electron concentration (cmˆ-3)", self.Electron_concentration)
-        self.draw_graph(self.ui.tab_8, "Electron mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.Electron_mobility)
+        self.draw_graph(self.ui.tab_4, "Electron concentration (cmˆ-3)", self.Electron_concentration/ 1e18)
+        self.draw_graph(self.ui.tab_8, "Electron mobility (1e18 cmˆ2 * Vˆ1 * sˆ-1)", self.Electron_mobility)
         self.draw_graph(self.ui.tab_9, "Hole mobility (cmˆ2 * Vˆ1 * sˆ-1)", self.Hole_mobility)
         self.draw_graph(self.ui.tab_2, "Hole concentration (1e18 cmˆ-3)", self.Hole_concentration / 1e18)
         if(self.flag_n):
-            self.draw_graph(self.ui.tab_3, "Positive donor concentration (cmˆ-3)", self.Positive_acceptor_concentration)
+            self.draw_graph(self.ui.tab_3, "Positive donor concentration (1e18 cmˆ-3)", self.Positive_acceptor_concentration/1e18)
         elif(self.flag_p):
             self.draw_graph(self.ui.tab_3, "Negative acceptor concentration (1e18 cmˆ-3)",
                             self.Negative_acceptor_concentration / 1e18)
+
         self.draw_graph(self.ui.tab_6, "Conductivity (Ωˆ-1 * cmˆ-1)", self.Conductivity)
         self.draw_graph(self.ui.tab_7, "Resistivity (Ω * cm)", self.Resistivity)
 
