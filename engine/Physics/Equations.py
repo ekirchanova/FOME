@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 # General constants and values
 e = 1.6021765e-19  # C
@@ -26,13 +26,7 @@ Be_GaAs = 14.8e-12
 Ap_GaAs = 1.8e6
 Bp_GaAs = 2.38e-12
 
-# Constants for reducing magnitude of values during computations
-# transform values to concentration control units
-CU_TO_CONCENTRATION = 2.51e19
-CONCENTRATION_TO_CU = 1 / CU_TO_CONCENTRATION
-
-ERG_TO_CU = EV_TO_ERG / k
-CU_TO_ERG = 1 / ERG_TO_CU
+STATE_DENSITY_CONSTANT = 2.51e19
 
 
 def state_density(m, T):
@@ -46,7 +40,7 @@ def state_density(m, T):
     Returns:
         float: value of state density in concentration control units.
     """
-    return m ** 1.5 * (T / T0) ** 1.5
+    return STATE_DENSITY_CONSTANT * m ** 1.5 * (T / T0) ** 1.5
 
 
 def electron_concentration(Nc, Ef, Eg, T):
@@ -62,7 +56,7 @@ def electron_concentration(Nc, Ef, Eg, T):
     Returns:
         float: value of electron concentration in concentration control units.
     """
-    return Nc * numpy.exp(ERG_TO_CU * (Ef - Eg) / T)
+    return Nc * np.exp(EV_TO_ERG * (Ef - Eg) / k / T)
 
 
 def hole_concentration(Nv, Ef, T):
@@ -77,7 +71,7 @@ def hole_concentration(Nv, Ef, T):
     Returns:
         float: value of hole concentration in concentration control units.
     """
-    return Nv * numpy.exp(-ERG_TO_CU * Ef / T)
+    return Nv * np.exp(-EV_TO_ERG * Ef / k / T)
 
 
 def pos_donor_concentration(Nd0, Ef, Ed, T):
@@ -93,7 +87,7 @@ def pos_donor_concentration(Nd0, Ef, Ed, T):
     Returns:
         float: value of positive donor ions concentration in concentration control units.
     """
-    return Nd0 / (1 + numpy.exp(ERG_TO_CU * (Ed - Ef) / T))
+    return Nd0 / (1 + np.exp(EV_TO_ERG * (-Ed + Ef) / k / T))
 
 
 def neg_acceptor_concentration(Na0, Ef, Ea, T):
@@ -109,7 +103,7 @@ def neg_acceptor_concentration(Na0, Ef, Ea, T):
     Returns:
         float: value of negative acceptor ions concentration in concentration control units.
     """
-    return Na0 / (1 + numpy.exp(ERG_TO_CU * (Ea - Ef) / T))
+    return Na0 / (1 + np.exp(EV_TO_ERG * (Ea - Ef) / k / T))
 
 
 def electron_concentration_d(Nc, Ef, Eg, T):
@@ -125,7 +119,7 @@ def electron_concentration_d(Nc, Ef, Eg, T):
     Returns:
         float: value of electron concentration derivative in concentration control units.
     """
-    return Nc * numpy.exp(ERG_TO_CU * (Ef - Eg) / T) * ERG_TO_CU / T
+    return Nc * np.exp(EV_TO_ERG * (Ef - Eg) / k / T) * EV_TO_ERG / k / T
 
 
 def hole_concentration_d(Nv, Ef, T):
@@ -140,7 +134,7 @@ def hole_concentration_d(Nv, Ef, T):
     Returns:
         float: value of hole concentration derivative in concentration control units.
     """
-    return -Nv * numpy.exp(-ERG_TO_CU * Ef / T) * ERG_TO_CU / T
+    return -Nv * np.exp(-EV_TO_ERG * Ef / k / T) * EV_TO_ERG / k / T
 
 
 def pos_donor_concentration_d(Nd0, Ef, Ed, T):
@@ -156,7 +150,7 @@ def pos_donor_concentration_d(Nd0, Ef, Ed, T):
     Returns:
         float: value of positive donor ions concentration derivative in concentration control units.
     """
-    return Nd0 * ERG_TO_CU / T * numpy.exp(ERG_TO_CU * (Ed - Ef) / T) / (1 + numpy.exp(ERG_TO_CU * (Ed - Ef) / T)) ** 2
+    return Nd0 * EV_TO_ERG / k / T * np.exp(EV_TO_ERG * (-Ed + Ef) / k / T) / (1 + np.exp(EV_TO_ERG * (-Ed + Ef) / k / T)) ** 2
 
 
 def neg_acceptor_concentration_d(Na0, Ef, Ea, T):
@@ -172,7 +166,7 @@ def neg_acceptor_concentration_d(Na0, Ef, Ea, T):
     Returns:
         float: value of negative acceptor ions concentration derivative in concentration control units.
     """
-    return Na0 * ERG_TO_CU / T * numpy.exp(ERG_TO_CU * (Ea - Ef) / T) / (1 + numpy.exp(ERG_TO_CU * (Ea - Ef) / T)) ** 2
+    return Na0 * EV_TO_ERG / k / T * np.exp(EV_TO_ERG * (Ea - Ef) / k / T) / (1 + np.exp(EV_TO_ERG * (Ea - Ef) / k / T)) ** 2
 
 
 def get_mobility(Ndp, Nan, T, A, B):
@@ -206,4 +200,4 @@ def get_conductivity(ne, mn, np, mp):
     Returns:
         float: value of conductivity in concentration control units.
     """
-    return CU_TO_CONCENTRATION * e * (ne * mn + np * mp)
+    return e * (ne * mn + np * mp)

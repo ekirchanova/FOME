@@ -1,8 +1,8 @@
-def newton_method(x0, f, f_d, error=1e-5):
+def newton_method(x0, f, f_d, Nmax=30):
     x = x0
 
     REPEAT_AMOUNT = 1
-    while abs(f(x)) > error:
+    while Nmax > REPEAT_AMOUNT:
         x = x - f(x) / f_d(x)
         REPEAT_AMOUNT += 1
 
@@ -10,7 +10,7 @@ def newton_method(x0, f, f_d, error=1e-5):
     return (x, REPEAT_AMOUNT)
 
 
-def dichotomy_method(x_left, x_right, f, error=1e-5):
+def dichotomy_method(x_left, x_right, f, Nmax=30):
     a = x_left
     b = x_right
     c = (a + b) / 2
@@ -20,7 +20,7 @@ def dichotomy_method(x_left, x_right, f, error=1e-5):
     f_c = f(c)
 
     REPEAT_AMOUNT = 1
-    while abs(f_c) > error:
+    while Nmax > REPEAT_AMOUNT:
         if f_c * f_b < 0:
             a = c
             f_a = f_c
