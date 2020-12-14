@@ -69,11 +69,11 @@ class StateCalculator:
         for i in range(len(self._Na_range)):
             def balance_equation(x):
                 return (
-                        Equations.hole_concentration(_Nv, x, self._T) -
-                        Equations.electron_concentration(_Nc, x, self._material["Eg"], self._T) -
-                        Equations.neg_acceptor_concentration(self._Na_range[i], x, self._Ea, self._T) +
                         Equations.pos_donor_concentration(self._Nd_range[i], x, self._material["Eg"], self._Ed,
-                                                          self._T))
+                                                self._T) -
+                        Equations.neg_acceptor_concentration(self._Na_range[i], x, self._Ea, self._T) +
+                        Equations.hole_concentration(_Nv, x, self._T) -
+                        Equations.electron_concentration(_Nc, x, self._material["Eg"], self._T))
 
             def balance_equation_d(x):
                 return (
@@ -129,9 +129,9 @@ class StateCalculator:
 
     def get_conductivity(self):
         """Returns value of conductivity for set parameters"""
-        print((1 / self._s)[-1])
-        return 1 / self._s
+        return self._s
 
     def get_resistivity(self):
         """Returns value of resistivity for set parameters"""
         return 1 / self.get_conductivity()
+
