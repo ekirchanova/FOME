@@ -117,7 +117,6 @@ class MyWin(QtWidgets.QMainWindow):
         self.calc.set_additions(self.Na, float(self.Ea), self.Nd, float(self.Ed))
         self.calc.update()
         self.full_all_field()
-        print(self.Hole_concentration)
         self.draw_graphics()
 
     def draw_graph(self, elem, name_graph, y_values):

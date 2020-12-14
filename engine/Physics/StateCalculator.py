@@ -72,7 +72,7 @@ class StateCalculator:
                         Equations.hole_concentration(_Nv, x, self._T) -
                         Equations.electron_concentration(_Nc, x, self._material["Eg"], self._T) -
                         Equations.neg_acceptor_concentration(self._Na_range[i], x, self._Ea, self._T) +
-                        Equations.pos_donor_concentration(self._Nd_range[i], x, self._material["Eg"] - self._Ed,
+                        Equations.pos_donor_concentration(self._Nd_range[i], x, self._material["Eg"], self._Ed,
                                                           self._T))
 
             def balance_equation_d(x):
@@ -80,17 +80,17 @@ class StateCalculator:
                         Equations.hole_concentration_d(_Nv, x, self._T) -
                         Equations.electron_concentration_d(_Nc, x, self._material["Eg"], self._T) -
                         Equations.neg_acceptor_concentration_d(self._Na_range[i], x, self._Ea, self._T) +
-                        Equations.pos_donor_concentration_d(self._Nd_range[i], x, self._material["Eg"] - self._Ed,
+                        Equations.pos_donor_concentration_d(self._Nd_range[i], x, self._material["Eg"], self._Ed,
                                                             self._T))
 
             # _Ef = Math.newton_method(self._material["Eg"]/2, balance_equation, balance_equation_d, 60)
-            _Ef = Math.dichotomy_method(-self._material["Eg"], 2*self._material["Eg"], balance_equation, 50)
+            _Ef = Math.dichotomy_method(-self._material["Eg"], 2*self._material["Eg"], balance_equation, 100)
 
             _Ef = _Ef[0]
             self._Ef[i] = _Ef
             self._ne[i] = Equations.electron_concentration(_Nc, _Ef, self._material["Eg"], self._T)
             self._np[i] = Equations.hole_concentration(_Nv, _Ef, self._T)
-            self._Ndp[i] = Equations.pos_donor_concentration(self._Nd_range[i], _Ef, self._material["Eg"] - self._Ed,
+            self._Ndp[i] = Equations.pos_donor_concentration(self._Nd_range[i], _Ef, self._material["Eg"], self._Ed,
                                                              self._T)
             self._Nan[i] = Equations.neg_acceptor_concentration(self._Na_range[i], _Ef, self._Ea, self._T)
             self._mn[i] = Equations.get_mobility(
@@ -129,7 +129,8 @@ class StateCalculator:
 
     def get_conductivity(self):
         """Returns value of conductivity for set parameters"""
-        return self._s
+        print((1 / self._s)[-1])
+        return 1 / self._s
 
     def get_resistivity(self):
         """Returns value of resistivity for set parameters"""

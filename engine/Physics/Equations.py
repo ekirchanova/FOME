@@ -40,7 +40,7 @@ def state_density(m, T):
     Returns:
         float: value of state density in concentration control units.
     """
-    return STATE_DENSITY_CONSTANT * m ** 1.5 * (T / T0) ** 1.5
+    return STATE_DENSITY_CONSTANT * (m * T / T0) ** 1.5
 
 
 def electron_concentration(Nc, Ef, Eg, T):
@@ -56,7 +56,7 @@ def electron_concentration(Nc, Ef, Eg, T):
     Returns:
         float: value of electron concentration in concentration control units.
     """
-    return Nc * np.exp(EV_TO_ERG * (Ef - Eg) / k / T)
+    return Nc * np.exp(EV_TO_ERG * (Ef - Eg) / (k * T))
 
 
 def hole_concentration(Nv, Ef, T):
@@ -71,23 +71,24 @@ def hole_concentration(Nv, Ef, T):
     Returns:
         float: value of hole concentration in concentration control units.
     """
-    return Nv * np.exp(-EV_TO_ERG * Ef / k / T)
+    return Nv * np.exp(-EV_TO_ERG * Ef / (k * T))
 
 
-def pos_donor_concentration(Nd0, Ef, Ed, T):
+def pos_donor_concentration(Nd0, Ef, Eg, Ed, T):
     """
     Calculates positive donor ions concentration in semiconductor crystal cell.
 
     Args:
         Nd0(float): density of states for electrons in concentration control units.
         Ef(float): Fermi level in eV.
+        Eg(float): Energy gap in eV.
         Ed(float): donor energy level (from the top of valent zone) in eV.
         T(float): current temperature in Kelvins.
 
     Returns:
         float: value of positive donor ions concentration in concentration control units.
     """
-    return Nd0 / (1 + np.exp(EV_TO_ERG * (-Ed + Ef) / k / T))
+    return Nd0 / (1 + np.exp(EV_TO_ERG * (-Eg + Ed - Ef) / (k * T)))
 
 
 def neg_acceptor_concentration(Na0, Ef, Ea, T):
@@ -103,70 +104,70 @@ def neg_acceptor_concentration(Na0, Ef, Ea, T):
     Returns:
         float: value of negative acceptor ions concentration in concentration control units.
     """
-    return Na0 / (1 + np.exp(EV_TO_ERG * (Ea - Ef) / k / T))
+    return Na0 / (1 + np.exp(EV_TO_ERG * (Ea - Ef) / (k * T)))
 
 
-def electron_concentration_d(Nc, Ef, Eg, T):
-    """
-    Calculates negative acceptor ions concentration derivative in semiconductor crystal cell.
-
-    Args:
-        Nc(float): density of states for electrons in concentration control units.
-        Ef(float): Fermi level in eV.
-        Eg(float): energy gap (from the top of valent zone) in eV.
-        T(float): current temperature in Kelvins.
-
-    Returns:
-        float: value of electron concentration derivative in concentration control units.
-    """
-    return Nc * np.exp(EV_TO_ERG * (Ef - Eg) / k / T) * EV_TO_ERG / k / T
-
-
-def hole_concentration_d(Nv, Ef, T):
-    """
-    Calculates hole concentration derivative in semiconductor crystal cell.
-
-    Args:
-        Nv(float): density of states for holes in concentration control units.
-        Ef(float): Fermi level in eV.
-        T(float): current temperature in Kelvins.
-
-    Returns:
-        float: value of hole concentration derivative in concentration control units.
-    """
-    return -Nv * np.exp(-EV_TO_ERG * Ef / k / T) * EV_TO_ERG / k / T
-
-
-def pos_donor_concentration_d(Nd0, Ef, Ed, T):
-    """
-    Calculates positive donor ions concentration derivative in semiconductor crystal cell.
-
-    Args:
-        Nd0(float): density of states for electrons in concentration control units.
-        Ef(float): Fermi level in eV.
-        Ed(float): donor energy level (from the top of valent zone) in eV.
-        T(float): current temperature in Kelvins.
-
-    Returns:
-        float: value of positive donor ions concentration derivative in concentration control units.
-    """
-    return Nd0 * EV_TO_ERG / k / T * np.exp(EV_TO_ERG * (-Ed + Ef) / k / T) / (1 + np.exp(EV_TO_ERG * (-Ed + Ef) / k / T)) ** 2
-
-
-def neg_acceptor_concentration_d(Na0, Ef, Ea, T):
-    """
-    Calculates negative acceptor ions concentration derivative in semiconductor crystal cell.
-
-    Args:
-        Na0(float): density of states for holes in concentration control units.
-        Ef(float): Fermi level in eV.
-        Ea(float): acceptor energy level (from the top of valent zone) in eV.
-        T(float): current temperature in Kelvins.
-
-    Returns:
-        float: value of negative acceptor ions concentration derivative in concentration control units.
-    """
-    return Na0 * EV_TO_ERG / k / T * np.exp(EV_TO_ERG * (Ea - Ef) / k / T) / (1 + np.exp(EV_TO_ERG * (Ea - Ef) / k / T)) ** 2
+# def electron_concentration_d(Nc, Ef, Eg, T):
+#     """
+#     Calculates negative acceptor ions concentration derivative in semiconductor crystal cell.
+#
+#     Args:
+#         Nc(float): density of states for electrons in concentration control units.
+#         Ef(float): Fermi level in eV.
+#         Eg(float): energy gap (from the top of valent zone) in eV.
+#         T(float): current temperature in Kelvins.
+#
+#     Returns:
+#         float: value of electron concentration derivative in concentration control units.
+#     """
+#     return Nc * np.exp(EV_TO_ERG * (Ef - Eg) / k / T) * EV_TO_ERG / k / T
+#
+#
+# def hole_concentration_d(Nv, Ef, T):
+#     """
+#     Calculates hole concentration derivative in semiconductor crystal cell.
+#
+#     Args:
+#         Nv(float): density of states for holes in concentration control units.
+#         Ef(float): Fermi level in eV.
+#         T(float): current temperature in Kelvins.
+#
+#     Returns:
+#         float: value of hole concentration derivative in concentration control units.
+#     """
+#     return -Nv * np.exp(-EV_TO_ERG * Ef / k / T) * EV_TO_ERG / k / T
+#
+#
+# def pos_donor_concentration_d(Nd0, Ef, Ed, T):
+#     """
+#     Calculates positive donor ions concentration derivative in semiconductor crystal cell.
+#
+#     Args:
+#         Nd0(float): density of states for electrons in concentration control units.
+#         Ef(float): Fermi level in eV.
+#         Ed(float): donor energy level (from the top of valent zone) in eV.
+#         T(float): current temperature in Kelvins.
+#
+#     Returns:
+#         float: value of positive donor ions concentration derivative in concentration control units.
+#     """
+#     return Nd0 * EV_TO_ERG / k / T * np.exp(EV_TO_ERG * (-Ed + Ef) / k / T) / (1 + np.exp(EV_TO_ERG * (-Ed + Ef) / k / T)) ** 2
+#
+#
+# def neg_acceptor_concentration_d(Na0, Ef, Ea, T):
+#     """
+#     Calculates negative acceptor ions concentration derivative in semiconductor crystal cell.
+#
+#     Args:
+#         Na0(float): density of states for holes in concentration control units.
+#         Ef(float): Fermi level in eV.
+#         Ea(float): acceptor energy level (from the top of valent zone) in eV.
+#         T(float): current temperature in Kelvins.
+#
+#     Returns:
+#         float: value of negative acceptor ions concentration derivative in concentration control units.
+#     """
+#     return Na0 * EV_TO_ERG / k / T * np.exp(EV_TO_ERG * (Ea - Ef) / k / T) / (1 + np.exp(EV_TO_ERG * (Ea - Ef) / k / T)) ** 2
 
 
 def get_mobility(Ndp, Nan, T, A, B):
@@ -184,20 +185,20 @@ def get_mobility(Ndp, Nan, T, A, B):
     Returns:
         float: value of electron mobility in concentration control units.
     """
-    return A / (T ** 1.5 + B * (Ndp + Nan) * T ** -1.5)
+    return A / ((T ** 1.5) + B * (Ndp + Nan) * (T ** -1.5))
 
 
-def get_conductivity(ne, mn, np, mp):
+def get_conductivity(Ne, mn, Np, mp):
     """
     Calculates conductivity of semiconductor crystal cell.
 
     Args:
-        ne(float): electron concentration in concentration control units.
+        Ne(float): electron concentration in concentration control units.
         mn(float): electron mobility in concentration control units.
-        np(float): hole concentration in concentration control units.
+        Np(float): hole concentration in concentration control units.
         mp(float): hole mobility in concentration control units.
 
     Returns:
         float: value of conductivity in concentration control units.
     """
-    return e * (ne * mn + np * mp)
+    return e * (Ne * mn + Np * mp)
