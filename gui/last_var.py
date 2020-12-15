@@ -140,7 +140,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_9), _translate("MainWindow", "Hole Mobility"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Electron Concentration"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Hole Concentration"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Admixture ion concentration"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Admixture Ion Concentration"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), _translate("MainWindow", "Conductivity"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_7), _translate("MainWindow", "Resistivity"))
 
@@ -149,7 +149,7 @@ class Ui_MainWindow(object):
         self.ComboBox.addItems(materials)
         self.label_2.setText(_translate("MainWindow", "Energy"))
         self.lineEdit_4.setText("0.045")
-        self.lineEdit_5.setText("0.1")
+        self.lineEdit_5.setText("1e-6")
         self.lineEdit_3.setText("10")
         self.lineEdit_10.setText("100")
         self.lineEdit_9.setText("300")

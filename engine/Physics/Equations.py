@@ -88,7 +88,7 @@ def pos_donor_concentration(Nd0, Ef, Eg, Ed, T):
     Returns:
         float: value of positive donor ions concentration in concentration control units.
     """
-    return Nd0 / (1 + np.exp(EV_TO_ERG * (-Eg + Ed - Ef) / (k * T)))
+    return Nd0 / (1 + 2*np.exp(EV_TO_ERG * (-Eg + Ed + Ef) / (k * T)))
 
 
 def neg_acceptor_concentration(Na0, Ef, Ea, T):
@@ -104,7 +104,7 @@ def neg_acceptor_concentration(Na0, Ef, Ea, T):
     Returns:
         float: value of negative acceptor ions concentration in concentration control units.
     """
-    return Na0 / (1 + np.exp(EV_TO_ERG * (Ea - Ef) / (k * T)))
+    return Na0 / (1 + 4*np.exp(EV_TO_ERG * (Ea - Ef) / (k * T)))
 
 
 # def electron_concentration_d(Nc, Ef, Eg, T):

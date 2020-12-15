@@ -18,7 +18,7 @@ class MyWin(QtWidgets.QMainWindow):
     Ndmax = 0
     Ea = 0
     Ed = 0
-    Nmin = 0.1
+    Nmin = 1e-6
     Nmax = 1
     E = 0.045
     flag_logx = False
@@ -112,8 +112,13 @@ class MyWin(QtWidgets.QMainWindow):
         self.material = self.ui.ComboBox.currentText()
         self.calc.set_material(str(self.material))
         self.calc.set_temperature(float(self.temperature))
-        self.Na = np.linspace(float(self.Namin)*1e18, float(self.Namax)*1e18, int(self.count))
-        self.Nd = np.linspace(float(self.Ndmin)*1e18, float(self.Ndmax)*1e18, int(self.count))
+        if self.flag_n:
+            self.Na = np.zeros(int(self.count))
+            self.Nd = np.linspace(float(self.Namin)*1e18, float(self.Namax)*1e18, int(self.count))
+        if self.flag_p:
+            self.Na = np.linspace(float(self.Ndmin)*1e18, float(self.Ndmax)*1e18, int(self.count))
+            self.Nd = np.zeros(int(self.count))
+
         self.calc.set_additions(self.Na, float(self.Ea), self.Nd, float(self.Ed))
         self.calc.update()
         self.full_all_field()
@@ -131,7 +136,6 @@ class MyWin(QtWidgets.QMainWindow):
         elif(self.flag_n):
             elem.setLabel("bottom", "Donor concentration Nd (1e18  cmˆ-3)", **styles)
             elem.plot(self.Nd/1e18, y_values, pen=pen, clear=True)
-
 
     def draw_graphics(self):
         self.draw_graph(self.ui.tab_4, "Electron concentration (1e18 cmˆ-3)", self.Electron_concentration/ 1e18)
@@ -169,11 +173,8 @@ class MyWin(QtWidgets.QMainWindow):
     def onChanged_Nmax(self, text):
         self.Nmax = text
 
-
     def onChanged_count(self, text):
         self.count = text
-
-
 
 
 if __name__ == "__main__":
